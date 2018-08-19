@@ -58,6 +58,9 @@ api.use(function(req, res, next) {
 //api routes
 api.get('/companies', routes.companies.list);
 api.post('/companies', routes.companies.create);
+api.put('/companies', routes.companies.update);
+api.get('/companies/:companyId', routes.companies.getCompanyById);
+api.delete('/companies/:companyId', routes.companies.remove);
 
 //api error handler
 api.use(function(err, req, res, next) {

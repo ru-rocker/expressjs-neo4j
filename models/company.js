@@ -10,18 +10,48 @@ var _manyGenres = function (result) {
   return result.records.map(r => new Company(r.get('c')));
 };
 
-var create = function (session, id, name) {
+var create = function (session, company) {
   return session.run('CREATE (c:Company{id: {id}, companyName: {name}}) RETURN c', {
-      id: parseInt(id),
-      name: name
+      id: company.id,
+      name: company.companyName
     })
     .then(results => {
       return new Company(results.records[0].get('c'));
     });
 };
 
+var update = function(session, company) {
+  return session.run('MATCH (c:Company{id: {id}}) SET c.companyName = {name} RETURN c', {
+    id: company.id,
+    name: company.companyName
+  })
+  .then(results => {
+    return new Company(results.records[0].get('c'));
+  });
+}
+
+var remove = function(session, id) {
+  return session.run('MATCH (c:Company{id: {id}}) DELETE c', {
+    id: id
+  })
+  .then(results => {
+    return {message: 'Company has been removed.', status: 204};
+  });
+}
+
+var getCompanyById = function(session, id) {
+  return session.run('MATCH (c:Company{id: {id}}) RETURN c', {
+    id: id
+  })
+  .then(results => {
+    return new Company(results.records[0].get('c'));
+  });
+}
 
 module.exports = {
   getAll: getAll,
-  create: create
+  create: create,
+  update: update,
+  remove: remove,
+  getCompanyById: getCompanyById
 };
