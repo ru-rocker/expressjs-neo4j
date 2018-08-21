@@ -7,12 +7,12 @@ var Company = require("../models/company")
 /**
 * @swagger
 * definition:
-*   Genre:
+*   Company:
 *     type: object
 *     properties:
 *       id:
-*         type: integer
-*       name:
+*         type: string
+*       companyName:
 *         type: string
 */
 
@@ -81,9 +81,7 @@ exports.create = function (req, res, next) {
 *     operationId: updateCompany
 *     consumes:
 *       - application/json
-*       - application/xml
 *     produces:
-*       - application/xml
 *       - application/json
 *     parameters:
 *       - in: body
@@ -116,7 +114,6 @@ exports.update = function (req, res, next) {
 *     description: ''
 *     operationId: deleteCompany
 *     produces:
-*       - application/xml
 *       - application/json
 *     parameters:
 *       - name: api_key
@@ -151,7 +148,6 @@ exports.remove = function (req, res, next) {
 *     description: Returns a single company
 *     operationId: getCompanyById
 *     produces:
-*       - application/xml
 *       - application/json
 *     parameters:
 *       - name: companyId
@@ -164,8 +160,6 @@ exports.remove = function (req, res, next) {
 *         description: successful operation
 *         schema:
 *           $ref: '#/definitions/Company'
-*       '400':
-*         description: Invalid ID supplied
 *       '404':
 *         description: Company not found
 */

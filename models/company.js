@@ -10,6 +10,14 @@ var _manyGenres = function (result) {
   return result.records.map(r => new Company(r.get('c')));
 };
 
+var _returnBySingleId = function (result) {
+  let rec = result.records;
+  if(rec.length == 0){
+    throw { message: 'Company is not found.', status: 404}
+  }
+  return new Company(rec[0].get('c'));
+}
+
 var create = function (session, company) {
   return session.run('CREATE (c:Company{id: {id}, companyName: {name}}) RETURN c', {
       id: company.id,
@@ -25,9 +33,7 @@ var update = function(session, company) {
     id: company.id,
     name: company.companyName
   })
-  .then(results => {
-    return new Company(results.records[0].get('c'));
-  });
+  .then(_returnBySingleId);
 }
 
 var remove = function(session, id) {
@@ -43,9 +49,7 @@ var getCompanyById = function(session, id) {
   return session.run('MATCH (c:Company{id: {id}}) RETURN c', {
     id: id
   })
-  .then(results => {
-    return new Company(results.records[0].get('c'));
-  });
+  .then(_returnBySingleId);
 }
 
 module.exports = {
