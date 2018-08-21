@@ -29,7 +29,8 @@ nconf.env(['PORT', 'NODE_ENV'])
     'neo4j': 'local',
     'neo4j-local': 'bolt://localhost:7687',
     'base_url': 'http://localhost:3000',
-    'api_path': '/api/v0'
+    'api_path': '/api/v0',
+    'jwtKey': 'SkyIsFallingDown'
   });
 
 module.exports = nconf;

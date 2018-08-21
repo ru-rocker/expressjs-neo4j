@@ -6,14 +6,18 @@ var logger = require('morgan');
 var nconf = require('./config');
 var methodOverride = require('method-override');
 var routes = require('./routes');
-var neo4jSessionCleanup = require('./middlewares/neo4jSessionCleanup');
-var writeError = require('./helpers/response').writeError;
+const passport = require("passport");
+
 var swaggerJSDoc = require('swagger-jsdoc');
 var swaggerUi = require('swagger-ui-express');
 
+var neo4jSessionCleanup = require('./middlewares/neo4jSessionCleanup');
+var writeError = require('./helpers/response').writeError;
+require('./middlewares/jwt');
+
 var app = express();
 var api = express();
-app.use(nconf.get('api_path'), api);
+app.use(nconf.get('api_path'), passport.authenticate('jwt', { session : false }), api);
 
 var swaggerDefinition = {
   info: {
