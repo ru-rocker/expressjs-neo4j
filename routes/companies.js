@@ -78,7 +78,7 @@ Company.getAll(dbUtils.getSession(req), req.query.companyName, req.query.offset,
 *         schema:
 *           $ref: '#/definitions/Company'
 *     responses:
-*       '201':
+*       '200':
 *         description: Company created
 *       '409':
 *         description: Invalid payload
