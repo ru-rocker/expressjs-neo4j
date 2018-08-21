@@ -76,7 +76,7 @@ var getAll = function (session, name, offset, limit) {
 var create = function (session, company) {
 
   let query = 'CREATE (c:Company{id: {id}, companyName: {companyName}, createdDate: {createdDate}, updatedDate: {updatedDate}}) RETURN c';
-  var readTxResultPromise = session.writeTransaction(function (transaction) {
+  var writexResultPromise = session.writeTransaction(function (transaction) {
 
     // used transaction will be committed automatically, no need for explicit commit/rollback
     var result = transaction.run(query, {
@@ -88,12 +88,12 @@ var create = function (session, company) {
     return result;
   });
 
-  return readTxResultPromise.then(_returnBySingleId).catch(_handlePayloadValidation);
+  return writexResultPromise.then(_returnBySingleId).catch(_handlePayloadValidation);
 };
 
 var update = function (session, company) {
   let query = 'MATCH (c:Company{id: {id}}) SET c += { companyName: {companyName}, updatedDate: {updatedDate}} RETURN c';
-  var readTxResultPromise = session.writeTransaction(function (transaction) {
+  var writexResultPromise = session.writeTransaction(function (transaction) {
 
     // used transaction will be committed automatically, no need for explicit commit/rollback
     var result = transaction.run(query, {
@@ -104,12 +104,12 @@ var update = function (session, company) {
     return result;
   });
 
-  return readTxResultPromise.then(_returnBySingleId).catch(_handlePayloadValidation);
+  return writexResultPromise.then(_returnBySingleId).catch(_handlePayloadValidation);
 }
 
 var remove = function (session, id) {
   let query = 'MATCH (c:Company{id: {id}}) DELETE c';
-  var readTxResultPromise = session.writeTransaction(function (transaction) {
+  var writexResultPromise = session.writeTransaction(function (transaction) {
 
     // used transaction will be committed automatically, no need for explicit commit/rollback
     var result = transaction.run(query, {
@@ -117,7 +117,7 @@ var remove = function (session, id) {
     });
     return result;
   });
-  return readTxResultPromise.then(results => {
+  return writexResultPromise.then(results => {
     return {
       message: 'Company has been removed.'
     };
