@@ -1,18 +1,32 @@
 var _ = require('lodash');
 var Company = require('../models/neo4j/company');
 
-var getAll = function (session, name) {
-  var str1 = "(?i)";
-  var str2 = ".*";
-  
+var getAll = function (session, name, offset, limit) {
+
+  // populate regex for searching
+  let str1 = "(?i)";
+  let str2 = ".*";
   if(name === undefined){
     name = str1.concat(str2);
   } else {
     name = str1.concat(name).concat(str2);
   }
 
-  return session.run("MATCH (c:Company) WHERE c.companyName =~ {name} RETURN c ORDER BY c.companyName", {
-    name: name
+  // set offset
+  if(offset === undefined || Number.isInteger(offset)){
+    offset = 0;
+  }
+  
+  // set limt
+  if(limit === undefined || Number.isInteger(limit)){
+    limit = 10;
+  }
+  
+  let query = "MATCH (c:Company) WHERE c.companyName =~ {name} RETURN c ORDER BY c.companyName SKIP {offset} LIMIT {limit}";
+  return session.run(query, {
+    name: name,
+    offset: parseInt(offset),
+    limit: parseInt(limit)
   })
   .then(_manyCompnaies);
 };

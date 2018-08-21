@@ -22,7 +22,7 @@ var Company = require("../models/company")
 *   get:
 *     tags:
 *     - company
-*     description: Returns all companies
+*     description: Returns all companies. Sorted by company name ASC.
 *     summary: Returns all companies
 *     produces:
 *       - application/json
@@ -32,6 +32,18 @@ var Company = require("../models/company")
 *         description: Company Name
 *         schema:
 *           type: string
+*       - in: query
+*         name: offset
+*         description: Result offset. Starting from 0.
+*         schema:
+*           type: integer
+*           default: 0
+*       - in: query
+*         name: limit
+*         description: Result limit.
+*         schema:
+*           type: integer
+*           default: 10
 *     responses:
 *       200:
 *         description: A list of companies
@@ -41,7 +53,7 @@ var Company = require("../models/company")
 *             $ref: '#/definitions/Company'
 */
 exports.list = function (req, res, next) {
-Company.getAll(dbUtils.getSession(req), req.query.companyName)
+Company.getAll(dbUtils.getSession(req), req.query.companyName, req.query.offset, req.query.limit)
   .then(response => writeResponse(res, response))
   .catch(next);
 };
