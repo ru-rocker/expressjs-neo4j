@@ -12,8 +12,10 @@ var Company = require("../models/company")
 *     properties:
 *       id:
 *         type: string
+*         description: Generated UUID.
 *       companyName:
 *         type: string
+*         description: Company name.
 */
 
 /**
@@ -34,13 +36,13 @@ var Company = require("../models/company")
 *           type: string
 *       - in: query
 *         name: offset
-*         description: Result offset. Starting from 0.
+*         description: Result offset. Default is 0.
 *         schema:
 *           type: integer
 *           default: 0
 *       - in: query
 *         name: limit
-*         description: Result limit.
+*         description: Result limit. Default is 10.
 *         schema:
 *           type: integer
 *           default: 10
