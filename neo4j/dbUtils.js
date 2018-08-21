@@ -32,6 +32,20 @@ exports.dbWhere = function (name, keys) {
   }
 };
 
+exports.getCurrentDate = function() {
+  var value = new Date();
+  return new neo4j.types.DateTime(
+      value.getFullYear(),
+      value.getMonth(),
+      value.getDay(),
+      value.getHours(),
+      value.getMinutes(),
+      value.getSeconds(),
+      value.getMilliseconds() * 1000000,
+      value.getTimezoneOffset() * 60
+  );  
+}
+
 function whereTemplate(name, key, paramKey) {
   return name + '.' + key + '={' + (paramKey || key) + '}';
 }
