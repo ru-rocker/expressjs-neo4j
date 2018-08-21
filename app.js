@@ -8,10 +8,41 @@ var methodOverride = require('method-override');
 var routes = require('./routes');
 var neo4jSessionCleanup = require('./middlewares/neo4jSessionCleanup');
 var writeError = require('./helpers/response').writeError;
+var swaggerJSDoc = require('swagger-jsdoc');
+var swaggerUi = require('swagger-ui-express');
 
 var app = express();
 var api = express();
 app.use(nconf.get('api_path'), api);
+
+var swaggerDefinition = {
+  info: {
+    title: 'Company API (Node/Express)',
+    version: '1.0.0',
+    description: '',
+  },
+  host: 'localhost:3000',
+  basePath: '/',
+};
+
+// options for the swagger docs
+var options = {
+  // import swaggerDefinitions
+  swaggerDefinition: swaggerDefinition,
+  // path to the API docs
+  apis: ['./routes/*.js'],
+};
+
+// initialize swagger-jsdoc
+var swaggerSpec = swaggerJSDoc(options);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// serve swagger
+api.get('/swagger.json', function(req, res) {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
 
 // set api setup
 api.use(logger('dev'));

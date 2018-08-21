@@ -21,7 +21,7 @@ var Company = require("../models/company")
 * /api/v0/companies:
 *   get:
 *     tags:
-*     - companies
+*     - company
 *     description: Returns all companies
 *     summary: Returns all companies
 *     produces:
@@ -45,7 +45,7 @@ Company.getAll(dbUtils.getSession(req))
 * /api/v0/companies:
 *   post:
 *     tags:
-*     - companies
+*     - company
 *     description: ''
 *     summary: Add a new company
 *     produces:
