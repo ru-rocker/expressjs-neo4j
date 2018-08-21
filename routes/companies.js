@@ -111,6 +111,8 @@ exports.create = function (req, res, next) {
 *         schema:
 *           $ref: '#/definitions/Company'
 *     responses:
+*       '200':
+*         description: Company updated
 *       '404':
 *         description: Company not found
 *       '409':
@@ -144,6 +146,8 @@ exports.update = function (req, res, next) {
 *         required: true
 *         type: string
 *     responses:
+*       '200':
+*         description: Company deleted
 *       '404':
 *         description: Company not found
 */

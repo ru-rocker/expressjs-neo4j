@@ -19,8 +19,11 @@ var _returnBySingleId = function (result) {
 
 var _handlePayloadValidation = function (err) {
   let code = err.code;
-  if(code === 'Neo.ClientError.Statement.ParameterMissing'){
-    throw { message: 'Payload does not match.', status: 405}
+  if (code === 'Neo.ClientError.Statement.ParameterMissing') {
+    throw {
+      message: err.message,
+      status: 405
+    }
   }
   throw err;
 }
@@ -31,71 +34,103 @@ var getAll = function (session, name, offset, limit) {
   // populate regex for searching
   let str1 = "(?i)";
   let str2 = ".*";
-  if(name === undefined){
+  if (name === undefined) {
     name = str1.concat(str2);
   } else {
     name = str1.concat(name).concat(str2);
   }
 
   // set offset
-  if(offset === undefined || !Number.isInteger(offset)){
+  if (offset === undefined || !Number.isInteger(offset)) {
     offset = 0;
   }
-  
+
   // set limt
-  if(limit === undefined || !Number.isInteger(limit)){
+  if (limit === undefined || !Number.isInteger(limit)) {
     limit = 10;
   }
-  
+
   let query = `MATCH (c:Company) 
                WHERE c.companyName =~ {name} 
                RETURN c 
                ORDER BY c.companyName 
                SKIP {offset} 
                LIMIT {limit}`;
-  return session.run(query, {
-    name: name,
-    offset: parseInt(offset),
-    limit: parseInt(limit)
-  })
-  .then(_manyCompnaies);
+
+  var readTxResultPromise = session.readTransaction(function (transaction) {
+
+    // used transaction will be committed automatically, no need for explicit commit/rollback
+    var result = transaction.run(query, {
+      name: name,
+      offset: parseInt(offset),
+      limit: parseInt(limit)
+    });
+    return result;
+  });
+
+  return readTxResultPromise.then(_manyCompnaies);
 };
 
 var create = function (session, company) {
-  return session.run('CREATE (c:Company{id: {id}, companyName: {name}}) RETURN c', {
+  let query = 'CREATE (c:Company{id: {id}, companyName: {companyName}}) RETURN c';
+  var readTxResultPromise = session.writeTransaction(function (transaction) {
+
+    // used transaction will be committed automatically, no need for explicit commit/rollback
+    var result = transaction.run(query, {
       id: company.id,
-      name: company.companyName
-    })
-    .then(_returnBySingleId)
-    .catch(_handlePayloadValidation);
+      companyName: company.companyName
+    });
+    return result;
+  });
+
+  return readTxResultPromise.then(_returnBySingleId).catch(_handlePayloadValidation);
 };
 
 var update = function (session, company) {
-  return session.run('MATCH (c:Company{id: {id}}) SET c.companyName = {name} RETURN c', {
+  let query = 'MATCH (c:Company{id: {id}}) SET c.companyName = {companyName} RETURN c';
+  var readTxResultPromise = session.writeTransaction(function (transaction) {
+
+    // used transaction will be committed automatically, no need for explicit commit/rollback
+    var result = transaction.run(query, {
       id: company.id,
-      name: company.companyName
-    })
-    .then(_returnBySingleId)
-    .catch(_handlePayloadValidation);
+      companyName: company.companyName
+    });
+    return result;
+  });
+
+  return readTxResultPromise.then(_returnBySingleId).catch(_handlePayloadValidation);
 }
 
 var remove = function (session, id) {
-  return session.run('MATCH (c:Company{id: {id}}) DELETE c', {
+  let query = 'MATCH (c:Company{id: {id}}) DELETE c';
+  var readTxResultPromise = session.writeTransaction(function (transaction) {
+
+    // used transaction will be committed automatically, no need for explicit commit/rollback
+    var result = transaction.run(query, {
       id: id
-    })
-    .then(results => {
-      return {
-        message: 'Company has been removed.',
-        status: 204
-      };
     });
+    return result;
+  });
+  return readTxResultPromise.then(results => {
+    return {
+      message: 'Company has been removed.'
+    };
+  });
 }
 
 var getCompanyById = function (session, id) {
-  return session.run('MATCH (c:Company{id: {id}}) RETURN c', {
+  let query = 'MATCH (c:Company{id: {id}}) RETURN c';
+  var readTxResultPromise = session.readTransaction(function (transaction) {
+
+    // used transaction will be committed automatically, no need for explicit commit/rollback
+    var result = transaction.run(query, {
       id: id
-    })
-    .then(_returnBySingleId);
+    });
+    return result;
+  });
+
+  return readTxResultPromise.then(_returnBySingleId);
+
 }
 
 // Exports functions.
