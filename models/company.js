@@ -1,6 +1,31 @@
 var _ = require('lodash');
 var Company = require('../models/neo4j/company');
 
+// response functions
+var _manyCompnaies = function (result) {
+  return result.records.map(r => new Company(r.get('c')));
+};
+
+var _returnBySingleId = function (result) {
+  let rec = result.records;
+  if (rec.length == 0) {
+    throw {
+      message: 'Company is not found.',
+      status: 404
+    }
+  }
+  return new Company(rec[0].get('c'));
+}
+
+var _handlePayloadValidation = function (err) {
+  let code = err.code;
+  if(code === 'Neo.ClientError.Statement.ParameterMissing'){
+    throw { message: 'Payload does not match.', status: 405}
+  }
+  throw err;
+}
+
+// API functions
 var getAll = function (session, name, offset, limit) {
 
   // populate regex for searching
@@ -36,29 +61,13 @@ var getAll = function (session, name, offset, limit) {
   .then(_manyCompnaies);
 };
 
-var _manyCompnaies = function (result) {
-  return result.records.map(r => new Company(r.get('c')));
-};
-
-var _returnBySingleId = function (result) {
-  let rec = result.records;
-  if (rec.length == 0) {
-    throw {
-      message: 'Company is not found.',
-      status: 404
-    }
-  }
-  return new Company(rec[0].get('c'));
-}
-
 var create = function (session, company) {
   return session.run('CREATE (c:Company{id: {id}, companyName: {name}}) RETURN c', {
       id: company.id,
       name: company.companyName
     })
-    .then(results => {
-      return new Company(results.records[0].get('c'));
-    });
+    .then(_returnBySingleId)
+    .catch(_handlePayloadValidation);
 };
 
 var update = function (session, company) {
@@ -66,7 +75,8 @@ var update = function (session, company) {
       id: company.id,
       name: company.companyName
     })
-    .then(_returnBySingleId);
+    .then(_returnBySingleId)
+    .catch(_handlePayloadValidation);
 }
 
 var remove = function (session, id) {
@@ -88,7 +98,7 @@ var getCompanyById = function (session, id) {
     .then(_returnBySingleId);
 }
 
-
+// Exports functions.
 module.exports = {
   getAll: getAll,
   create: create,

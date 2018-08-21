@@ -73,15 +73,15 @@ Company.getAll(dbUtils.getSession(req), req.query.companyName, req.query.offset,
 *     parameters:
 *       - in: body
 *         name: body
-*         description: Company object that needs to be added to the system
+*         description: Company object that needs to be added to the system. ID will be replaced by system.
 *         required: true
 *         schema:
 *           $ref: '#/definitions/Company'
 *     responses:
 *       '201':
 *         description: Company created
-*       '405':
-*         description: Invalid input
+*       '409':
+*         description: Invalid payload
 */
 exports.create = function (req, res, next) {
   req.body.id = uuidv1();
@@ -111,12 +111,10 @@ exports.create = function (req, res, next) {
 *         schema:
 *           $ref: '#/definitions/Company'
 *     responses:
-*       '400':
-*         description: Invalid ID supplied
 *       '404':
 *         description: Company not found
-*       '405':
-*         description: Validation exception
+*       '409':
+*         description: Invalid payload
 */
 exports.update = function (req, res, next) {
   Company.update(dbUtils.getSession(req), req.body)
@@ -146,8 +144,6 @@ exports.update = function (req, res, next) {
 *         required: true
 *         type: string
 *     responses:
-*       '400':
-*         description: Invalid ID supplied
 *       '404':
 *         description: Company not found
 */
