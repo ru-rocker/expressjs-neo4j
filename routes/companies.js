@@ -26,6 +26,12 @@ var Company = require("../models/company")
 *     summary: Returns all companies
 *     produces:
 *       - application/json
+*     parameters:
+*       - in: query
+*         name: companyName
+*         description: Company Name
+*         schema:
+*           type: string
 *     responses:
 *       200:
 *         description: A list of companies
@@ -35,7 +41,7 @@ var Company = require("../models/company")
 *             $ref: '#/definitions/Company'
 */
 exports.list = function (req, res, next) {
-Company.getAll(dbUtils.getSession(req))
+Company.getAll(dbUtils.getSession(req), req.query.companyName)
   .then(response => writeResponse(res, response))
   .catch(next);
 };
