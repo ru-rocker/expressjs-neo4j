@@ -6,6 +6,11 @@ var Company = require("../models/company")
 
 /**
 * @swagger
+* securityDefinitions:
+*   Bearer:
+*     type: apiKey
+*     name: Authorization
+*     in: header
 * definition:
 *   Company:
 *     type: object
@@ -46,6 +51,8 @@ var Company = require("../models/company")
 *         schema:
 *           type: integer
 *           default: 10
+*     security:
+*       - Bearer: []
 *     responses:
 *       200:
 *         description: A list of companies
@@ -77,6 +84,8 @@ Company.getAll(dbUtils.getSession(req), req.query.companyName, req.query.offset,
 *         required: true
 *         schema:
 *           $ref: '#/definitions/Company'
+*     security:
+*       - Bearer: []
 *     responses:
 *       '200':
 *         description: Company created
@@ -113,6 +122,8 @@ exports.create = function (req, res, next) {
 *         required: true
 *         schema:
 *           $ref: '#/definitions/Company'
+*     security:
+*       - Bearer: []
 *     responses:
 *       '200':
 *         description: Company updated
@@ -150,6 +161,8 @@ exports.update = function (req, res, next) {
 *         description: Company id to delete
 *         required: true
 *         type: string
+*     security:
+*       - Bearer: []
 *     responses:
 *       '200':
 *         description: Company deleted
@@ -180,6 +193,8 @@ exports.remove = function (req, res, next) {
 *         description: ID of company to return
 *         required: true
 *         type: string
+*     security:
+*       - Bearer: []
 *     responses:
 *       '200':
 *         description: successful operation
