@@ -13,16 +13,21 @@ var getAll = function (session, name, offset, limit) {
   }
 
   // set offset
-  if(offset === undefined || Number.isInteger(offset)){
+  if(offset === undefined || !Number.isInteger(offset)){
     offset = 0;
   }
   
   // set limt
-  if(limit === undefined || Number.isInteger(limit)){
+  if(limit === undefined || !Number.isInteger(limit)){
     limit = 10;
   }
   
-  let query = "MATCH (c:Company) WHERE c.companyName =~ {name} RETURN c ORDER BY c.companyName SKIP {offset} LIMIT {limit}";
+  let query = `MATCH (c:Company) 
+               WHERE c.companyName =~ {name} 
+               RETURN c 
+               ORDER BY c.companyName 
+               SKIP {offset} 
+               LIMIT {limit}`;
   return session.run(query, {
     name: name,
     offset: parseInt(offset),
