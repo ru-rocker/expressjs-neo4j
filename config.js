@@ -1,6 +1,6 @@
-'use strict';
+'use strict'
 
-var nconf = require('nconf');
+var nconf = require('nconf')
 
 nconf.env(['PORT', 'NODE_ENV'])
   .argv({
@@ -17,20 +17,20 @@ nconf.env(['PORT', 'NODE_ENV'])
       default: 3000
     },
     'n': {
-      alias: "neo4j",
-      describe: "Use local or remote neo4j instance",
+      alias: 'neo4j',
+      describe: 'Use local or remote neo4j instance',
       demand: false,
-      default: "local"
+      default: 'local'
     }
   })
   .defaults({
     'USERNAME': 'neo4j',
-    'PASSWORD' : 'password',
+    'PASSWORD': 'password',
     'neo4j': 'local',
     'neo4j-local': 'bolt://localhost:7687',
     'base_url': 'http://localhost:3000',
     'api_path': '/api/v0',
     'jwtKey': 'SkyIsFallingDown'
-  });
+  })
 
-module.exports = nconf;
+module.exports = nconf
