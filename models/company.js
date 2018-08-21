@@ -1,8 +1,10 @@
 var _ = require('lodash');
 var Company = require('../models/neo4j/company');
+var dbUtils = require('../neo4j/dbUtils');
+const neo4j = require('neo4j-driver').v1;
 
 // response functions
-var _manyCompnaies = function (result) {
+var _manyCompanies = function (result) {
   return result.records.map(r => new Company(r.get('c')));
 };
 
@@ -68,17 +70,20 @@ var getAll = function (session, name, offset, limit) {
     return result;
   });
 
-  return readTxResultPromise.then(_manyCompnaies);
+  return readTxResultPromise.then(_manyCompanies);
 };
 
 var create = function (session, company) {
-  let query = 'CREATE (c:Company{id: {id}, companyName: {companyName}}) RETURN c';
+
+  let query = 'CREATE (c:Company{id: {id}, companyName: {companyName}, createdDate: {createdDate}, updatedDate: {updatedDate}}) RETURN c';
   var readTxResultPromise = session.writeTransaction(function (transaction) {
 
     // used transaction will be committed automatically, no need for explicit commit/rollback
     var result = transaction.run(query, {
       id: company.id,
-      companyName: company.companyName
+      companyName: company.companyName,
+      createdDate: company.createdDate,
+      updatedDate: company.updatedDate
     });
     return result;
   });
@@ -87,13 +92,14 @@ var create = function (session, company) {
 };
 
 var update = function (session, company) {
-  let query = 'MATCH (c:Company{id: {id}}) SET c.companyName = {companyName} RETURN c';
+  let query = 'MATCH (c:Company{id: {id}}) SET c += { companyName: {companyName}, updatedDate: {updatedDate}} RETURN c';
   var readTxResultPromise = session.writeTransaction(function (transaction) {
 
     // used transaction will be committed automatically, no need for explicit commit/rollback
     var result = transaction.run(query, {
       id: company.id,
-      companyName: company.companyName
+      companyName: company.companyName,
+      updatedDate: company.updatedDate
     });
     return result;
   });

@@ -84,7 +84,10 @@ Company.getAll(dbUtils.getSession(req), req.query.companyName, req.query.offset,
 *         description: Invalid payload
 */
 exports.create = function (req, res, next) {
+  let currentDate = dbUtils.getCurrentDate();
   req.body.id = uuidv1();
+  req.body.createdDate = currentDate;
+  req.body.updatedDate = currentDate;
   Company.create(dbUtils.getSession(req), req.body)
     .then(response => writeResponse(res, response))
     .catch(next);
@@ -119,6 +122,8 @@ exports.create = function (req, res, next) {
 *         description: Invalid payload
 */
 exports.update = function (req, res, next) {
+  let currentDate = dbUtils.getCurrentDate();
+  req.body.updatedDate = currentDate;
   Company.update(dbUtils.getSession(req), req.body)
     .then(response => writeResponse(res, response))
     .catch(next);
