@@ -1,10 +1,12 @@
 var express = require('express')
 var cookieParser = require('cookie-parser')
 var logger = require('morgan')
-var nconf = require('./config')
 var methodOverride = require('method-override')
 var routes = require('./routes')
 const passport = require('passport')
+
+var env = process.env.NODE_ENV || 'development';
+var config = require('./config/config')[env];
 
 var swaggerJSDoc = require('swagger-jsdoc')
 var swaggerUi = require('swagger-ui-express')
@@ -15,7 +17,7 @@ require('./middlewares/jwt')
 
 var app = express()
 var api = express()
-app.use(nconf.get('api_path'), passport.authenticate('jwt', { session: false }), api)
+app.use(config.api_path, passport.authenticate('jwt', { session: false }), api)
 
 var swaggerDefinition = {
   info: {

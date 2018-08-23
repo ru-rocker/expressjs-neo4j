@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "neo4j",
+    "password": "password",
+    "neo4j": "bolt://localhost:7687",
+    "base_url": "http://localhost:3000",
+    "api_path": "/api/v0",
+    "jwtKey": "SkyIsFallingDown"
+  },
+  "test": {
+    "username": "neo4j",
+    "password": "password",
+    "neo4j": "bolt://localhost:7687",
+    "base_url": "http://localhost:3000",
+    "api_path": "/api/v0",
+    "jwtKey": "SkyIsFallingDown"
+  },
+  "production": {
+    "username": "neo4j",
+    "password": "password",
+    "neo4j": "bolt://localhost:7687",
+    "base_url": "http://localhost:3000",
+    "api_path": "/api/v0",
+    "jwtKey": "SkyIsFallingDown"
+  }
+}
