@@ -1,8 +1,7 @@
-var Company = require("../models/company")
-, writeResponse = require('../helpers/response').writeResponse
-, dbUtils = require('../neo4j/dbUtils')
-, uuidv1 = require('uuid/v1');
-
+var Company = require('../models/company')
+var writeResponse = require('../helpers/response').writeResponse
+var dbUtils = require('../neo4j/dbUtils')
+var uuidv1 = require('uuid/v1')
 
 /**
 * @swagger
@@ -75,10 +74,10 @@ var Company = require("../models/company")
 *             $ref: '#/definitions/Company'
 */
 exports.list = function (req, res, next) {
-Company.getAll(dbUtils.getSession(req), req.query.companyName, req.query.offset, req.query.limit)
-  .then(response => writeResponse(res, response))
-  .catch(next);
-};
+  Company.getAll(dbUtils.getSession(req), req.query.companyName, req.query.offset, req.query.limit)
+    .then(response => writeResponse(res, response))
+    .catch(next)
+}
 
 /**
 * @swagger
@@ -107,15 +106,15 @@ Company.getAll(dbUtils.getSession(req), req.query.companyName, req.query.offset,
 *         description: Invalid payload
 */
 exports.create = function (req, res, next) {
-  let currentDate = dbUtils.getCurrentDate();
-  req.body.id = uuidv1();
-  req.body.createdDate = currentDate;
-  req.body.updatedDate = currentDate;
+  let currentDate = dbUtils.getCurrentDate()
+  req.body.id = uuidv1()
+  req.body.createdDate = currentDate
+  req.body.updatedDate = currentDate
   Company.create(dbUtils.getSession(req), req.body)
     .then(response => writeResponse(res, response))
-    .catch(next);
-  };
-  
+    .catch(next)
+}
+
 /**
 * @swagger
 * /api/v0/companies:
@@ -148,12 +147,12 @@ exports.create = function (req, res, next) {
 *         description: Invalid payload
 */
 exports.update = function (req, res, next) {
-  let currentDate = dbUtils.getCurrentDate();
-  req.body.updatedDate = currentDate;
+  let currentDate = dbUtils.getCurrentDate()
+  req.body.updatedDate = currentDate
   Company.update(dbUtils.getSession(req), req.body)
     .then(response => writeResponse(res, response))
-    .catch(next);
-  };
+    .catch(next)
+}
 
 /**
 * @swagger
@@ -186,11 +185,11 @@ exports.update = function (req, res, next) {
 *         description: Company not found
 */
 exports.remove = function (req, res, next) {
-  var id = req.params.companyId;
+  var id = req.params.companyId
   Company.remove(dbUtils.getSession(req), id)
     .then(response => writeResponse(res, response))
-    .catch(next);
-  };
+    .catch(next)
+}
 
 /**
 * @swagger
@@ -221,8 +220,8 @@ exports.remove = function (req, res, next) {
 *         description: Company not found
 */
 exports.getCompanyById = function (req, res, next) {
-  var id = req.params.companyId;
+  var id = req.params.companyId
   Company.getCompanyById(dbUtils.getSession(req), id)
     .then(response => writeResponse(res, response))
-    .catch(next);
-  };
+    .catch(next)
+}
