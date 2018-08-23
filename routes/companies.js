@@ -11,6 +11,10 @@ var Company = require("../models/company")
 *     type: apiKey
 *     name: Authorization
 *     in: header
+*   api_key:
+*     type: apiKey
+*     name: Client ID
+*     in: header
 * definition:
 *   Company:
 *     type: object
@@ -21,6 +25,14 @@ var Company = require("../models/company")
 *       companyName:
 *         type: string
 *         description: Company name.
+*       createdDate:
+*         type: string
+*         format: date-time
+*         description: Created Date. Auto populate while creating object.
+*       updatedDate:
+*         type: string
+*         format: date-time
+*         description: Updated Date. Auto populate while updating object.
 */
 
 /**
@@ -53,6 +65,7 @@ var Company = require("../models/company")
 *           default: 10
 *     security:
 *       - Bearer: []
+*       - api_key: []
 *     responses:
 *       200:
 *         description: A list of companies
@@ -86,6 +99,7 @@ Company.getAll(dbUtils.getSession(req), req.query.companyName, req.query.offset,
 *           $ref: '#/definitions/Company'
 *     security:
 *       - Bearer: []
+*       - api_key: []
 *     responses:
 *       '200':
 *         description: Company created
@@ -124,6 +138,7 @@ exports.create = function (req, res, next) {
 *           $ref: '#/definitions/Company'
 *     security:
 *       - Bearer: []
+*       - api_key: []
 *     responses:
 *       '200':
 *         description: Company updated
@@ -163,6 +178,7 @@ exports.update = function (req, res, next) {
 *         type: string
 *     security:
 *       - Bearer: []
+*       - api_key: []
 *     responses:
 *       '200':
 *         description: Company deleted
@@ -195,6 +211,7 @@ exports.remove = function (req, res, next) {
 *         type: string
 *     security:
 *       - Bearer: []
+*       - api_key: []
 *     responses:
 *       '200':
 *         description: successful operation
