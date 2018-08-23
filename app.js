@@ -49,7 +49,9 @@ api.get('/swagger.json', function (req, res) {
 })
 
 // set api setup
-api.use(logger('dev'))
+if (process.env.NODE_ENV !== 'test') {
+  api.use(logger('dev'))
+}
 api.use(express.json())
 api.use(cookieParser())
 api.use(express.urlencoded({ extended: false }))

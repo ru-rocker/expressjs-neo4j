@@ -10,4 +10,9 @@
        ./node_modules/.bin/eslint --ext *.js
 
 
+# Testing
 
+      
+       npm install mocha chai chai-http --save-dev
+
+       
