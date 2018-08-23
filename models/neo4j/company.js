@@ -5,9 +5,9 @@ var _ = require('lodash');
 var Company = module.exports = function (_node) {
   _.extend(this, _node.properties);
   if(this.createdDate) {
-    this.createdDate = this.createdDate.toString();
+    this.createdDate = new Date(this.createdDate.toString());
   }
   if(this.updatedDate) {
-    this.updatedDate = this.updatedDate.toString();
+    this.updatedDate = new Date(this.updatedDate.toString());
   }
 };

@@ -35,13 +35,13 @@ exports.dbWhere = function (name, keys) {
 exports.getCurrentDate = function() {
   var value = new Date();
   return new neo4j.types.DateTime(
-      value.getFullYear(),
-      value.getMonth(),
-      value.getDay(),
-      value.getHours(),
-      value.getMinutes(),
-      value.getSeconds(),
-      value.getMilliseconds() * 1000000,
+      value.getUTCFullYear(),
+      value.getUTCMonth() + 1, //because neo4j DateTime.months start from 1 instead of 0.
+      value.getUTCDate(),
+      value.getUTCHours(),
+      value.getUTCMinutes(),
+      value.getUTCSeconds(),
+      value.getUTCMilliseconds() * 1000000,
       value.getTimezoneOffset() * 60
   );  
 }
