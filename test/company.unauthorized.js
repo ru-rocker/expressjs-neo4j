@@ -40,8 +40,7 @@ describe('Unauthorized Request', () => {
       chai.request(app)
         .post('/api/v0/companies')
         .send(company)
-        .end((err, res) => {
-          console.log(err)
+        .end((_, res) => {
           res.should.have.status(401)
           done()
         })
