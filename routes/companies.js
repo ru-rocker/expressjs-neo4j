@@ -12,7 +12,7 @@ var uuidv1 = require('uuid/v1')
 *     in: header
 *   api_key:
 *     type: apiKey
-*     name: Client ID
+*     name: client_id
 *     in: header
 * definition:
 *   Company:
@@ -72,6 +72,8 @@ var uuidv1 = require('uuid/v1')
 *           type: array
 *           items:
 *             $ref: '#/definitions/Company'
+*       401:
+*         description: Unauthorized. Need JWT.
 */
 exports.list = function (req, res, next) {
   Company.getAll(dbUtils.getSession(req), req.query.companyName, req.query.offset, req.query.limit)
@@ -100,9 +102,11 @@ exports.list = function (req, res, next) {
 *       - Bearer: []
 *       - api_key: []
 *     responses:
-*       '200':
+*       200:
 *         description: Company created
-*       '409':
+*       401:
+*         description: Unauthorized. Need JWT.
+*       409:
 *         description: Invalid payload
 */
 exports.create = function (req, res, next) {
@@ -139,11 +143,13 @@ exports.create = function (req, res, next) {
 *       - Bearer: []
 *       - api_key: []
 *     responses:
-*       '200':
+*       200:
 *         description: Company updated
-*       '404':
+*       401:
+*         description: Unauthorized. Need JWT.
+*       404:
 *         description: Company not found
-*       '409':
+*       409:
 *         description: Invalid payload
 */
 exports.update = function (req, res, next) {
@@ -166,10 +172,6 @@ exports.update = function (req, res, next) {
 *     produces:
 *       - application/json
 *     parameters:
-*       - name: api_key
-*         in: header
-*         required: false
-*         type: string
 *       - name: companyId
 *         in: path
 *         description: Company id to delete
@@ -179,9 +181,11 @@ exports.update = function (req, res, next) {
 *       - Bearer: []
 *       - api_key: []
 *     responses:
-*       '200':
+*       200:
 *         description: Company deleted
-*       '404':
+*       401:
+*         description: Unauthorized. Need JWT.
+*       404:
 *         description: Company not found
 */
 exports.remove = function (req, res, next) {
@@ -212,11 +216,13 @@ exports.remove = function (req, res, next) {
 *       - Bearer: []
 *       - api_key: []
 *     responses:
-*       '200':
+*       200:
 *         description: successful operation
 *         schema:
 *           $ref: '#/definitions/Company'
-*       '404':
+*       401:
+*         description: Unauthorized. Need JWT.
+*       404:
 *         description: Company not found
 */
 exports.getCompanyById = function (req, res, next) {
