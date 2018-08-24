@@ -1,7 +1,4 @@
-var _ = require('lodash')
 var Company = require('../models/neo4j/company')
-var dbUtils = require('../neo4j/dbUtils')
-const neo4j = require('neo4j-driver').v1
 
 // response functions
 var _manyCompanies = function (result) {
@@ -10,11 +7,12 @@ var _manyCompanies = function (result) {
 
 var _returnBySingleId = function (result) {
   let rec = result.records
-  if (rec.length == 0) {
-    throw {
+  if (rec.length === 0) {
+    let error = {
       message: 'Company is not found.',
       status: 404
     }
+    throw error
   }
   return new Company(rec[0].get('c'))
 }
@@ -22,10 +20,11 @@ var _returnBySingleId = function (result) {
 var _handlePayloadValidation = function (err) {
   let code = err.code
   if (code === 'Neo.ClientError.Statement.ParameterMissing') {
-    throw {
+    let error = {
       message: err.message,
-      status: 405
+      status: 409
     }
+    throw error
   }
   throw err
 }

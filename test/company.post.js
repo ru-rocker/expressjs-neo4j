@@ -20,28 +20,9 @@ let jwt = 'Bearer ' +
           '.eyJpc3MiOiJzY290Y2guaW8iLCJleHAiOjE1MzAwODE5MzgwLCJuYW1lIjoiQ2hyaXMgU2V2aWxsZWphIiwiYWRtaW4iOnRydWV9' +
           '.lprxmjM4TpncZXAl6cMAgn5m33rdkccyUcneHSi2ZKQ'
 
-describe('Company', () => {
-  let id = ''
-  before((done) => {
-    Company.removeAll(dbUtils.getSession({})).then(() => {
-      done()
-    })
-  })
-  describe('/GET companies', () => {
-    it('it should GET all the companies', (done) => {
-      chai.request(app)
-        .get('/api/v0/companies')
-        .set('Authorization', jwt)
-        .end((_, res) => {
-          res.should.have.status(200)
-          res.body.should.be.a('array')
-          res.body.length.should.be.eql(0)
-          done()
-        })
-    })
-  })
+describe('Create Company', () => {
   describe('/POST company', () => {
-    it('it should POST a company', (done) => {
+    it('it should create a company', (done) => {
       let company = {
         companyName: 'ru-rocker corp'
       }
@@ -50,7 +31,6 @@ describe('Company', () => {
         .set('Authorization', jwt)
         .send(company)
         .end((_, res) => {
-          id = res.body.id
           res.should.have.status(200)
           res.body.should.be.a('object')
           res.body.should.have.property('createdDate')
@@ -62,25 +42,26 @@ describe('Company', () => {
         })
     })
   })
-  describe('/PUT company', () => {
-    it('it should PUT a company', (done) => {
+  describe('/POST company with wrong payload', () => {
+    it('it should not create a company with wrong payload', (done) => {
       let company = {
-        id: id,
-        companyName: 'ru-rocker corporation'
+        x: 'ru-rocker corp'
       }
       chai.request(app)
-        .put('/api/v0/companies')
+        .post('/api/v0/companies')
         .set('Authorization', jwt)
         .send(company)
         .end((_, res) => {
-          res.should.have.status(200)
+          res.should.have.status(409)
           res.body.should.be.a('object')
-          res.body.should.have.property('createdDate')
-          res.body.should.have.property('updatedDate').to.not.equal(res.body.createdDate)
-          res.body.should.have.property('id').eql(id)
-          res.body.should.have.property('companyName').eql('ru-rocker corporation')
+          res.body.should.have.property('message').eql('Expected parameter(s): companyName')
           done()
         })
+    })
+  })
+  after((done) => {
+    Company.removeAll(dbUtils.getSession({})).then(() => {
+      done()
     })
   })
 })
